@@ -1,0 +1,38 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="ctrl.close()">
+		<span aria-hidden="true">×</span>
+	</button>
+	<h4 class="modal-title" id="modalBank">Horarios de Atención</h4>
+</div>
+<div class="modal-body">
+	<div class="table-responsive">
+		<table class="table" style="font-size: 90%;">
+			<thead>
+				<tr>
+					<th>Sede</th>
+					<th>Servicio</th>
+					<th>Horarios</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="t in ctrl.times track by $index">
+					<td>
+						<span ng-if="$index>0 && (ctrl.times[$index].local_nombre != ctrl.times[$index-1].local_nombre)">{{ t.local_nombre }}</span>
+						<span ng-if="$index==0">{{ t.local_nombre }}</span>
+					</td>
+					<td>
+						{{ t.modelo_nombre }}
+					</td>
+					<td>
+						<div ng-repeat="h in t.times">
+							{{h.text}} de {{h.hini|timeFormat}} a {{h.hfin|timeFormat}}
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" ng-click="ctrl.close()"><i class="fa fa-times"></i> Cerrar</button>
+</div>

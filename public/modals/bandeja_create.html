@@ -1,0 +1,101 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="ctrl.close()"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="modalCorrespondencia">Nuevo Mensaje</h4>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" ng-submit="ctrl.send()">
+    	<div class="form-group form-group-sm">
+			<label class="control-label col-sm-2">A</label>
+			<div class="col-sm-10">
+            	<select class="form-control" ng-model="ctrl.params.a" ng-options="empleado.name for empleado in ctrl.aux.empleados track by empleado.value" ng-change=""></select>
+            </div>
+    	</div>
+    	<div class="form-group form-group-sm">
+			<label class="control-label col-sm-2">Asunto</label>
+			<div class="col-sm-10">
+            	<select class="form-control" ng-model="ctrl.params.asunto" ng-options="asunto.name for asunto in ctrl.aux.asuntos track by asunto.value" ng-change=""></select>
+            </div>
+    	</div>
+    	<div class="form-group form-group-sm" ng-if="ctrl.params.asunto.value!='-' && ctrl.params.asunto.value!='A' && ctrl.params.asunto.value!='H'">
+			<label class="control-label col-sm-2">Mensaje</label>
+			<div class="col-sm-10">
+            	<textarea class="form-control" ng-model="ctrl.params.mensaje" ng-if="ctrl.params.asunto.value!='-' && ctrl.params.asunto.value!='A' && ctrl.params.asunto.value!='H'" style="height: 150px;" ></textarea>
+            </div>
+    	</div>
+
+    	<div ng-if="ctrl.params.asunto.value=='H'">
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Periodo</label>
+				<div class="col-sm-5">
+					<select class="form-control" ng-model="ctrl.params.anio" ng-options="y for y in ctrl.aux.years" ></select>
+				</div>
+				<div class="col-sm-5">
+					<select class="form-control" ng-model="ctrl.params.mes" ng-options="(key*1) as value for (key,value) in ctrl.aux.months" ></select>
+				</div>
+    		</div>
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Horas</label>
+				<div class="col-sm-10">
+					<input class="form-control" type="number"  min="1" max="10" ng-model="ctrl.params.horas">
+				</div>
+    		</div>
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Tipo</label>
+				<div class="col-sm-10">
+					<select class="form-control" ng-model="ctrl.params.tipo">
+						<option value="R">Reunion</option>
+						<option value="P">Privada</option>
+					</select>
+				</div>
+    		</div>
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Pago</label>
+				<div class="col-sm-10">
+					<select class="form-control" ng-model="ctrl.params.pago">
+						<option value="F" ng-if="ctrl.aux.sgtemes">Sgte. Facturacion</option>
+						<option value="N">Al Momento</option>
+					</select>
+				</div>
+    		</div>
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Deposito</label>
+				<div class="col-sm-10">
+					<input class="form-control" type="text" ng-model="ctrl.params.deposito">
+				</div>
+    		</div>
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Observación</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" style="height: 100px;" ng-model="ctrl.params.obs"></textarea>
+				</div>
+    		</div>
+    	</div>
+
+    	<div ng-if="ctrl.params.asunto.value=='A'">
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Fecha</label>
+				<div class="col-sm-10">
+					<input class="form-control" type="text" ng-model="ctrl.params.fecha">
+				</div>
+    		</div>			
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Deposito</label>
+				<div class="col-sm-10">
+					<input class="form-control" type="text" ng-model="ctrl.params.deposito">
+				</div>
+    		</div>
+    		<div class="form-group form-group-sm">
+				<label class="control-label col-sm-2">Observación</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" style="height: 100px;" ng-model="ctrl.params.obs"></textarea>
+				</div>
+    		</div>
+    	</div>
+
+	    <hr>
+	    <div class="text-right mb0">
+	        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" ng-click="ctrl.close()" ng-disabled="ctrl.sending">Cerrar</button>
+			<button type="submit" class="btn btn-warning btn-sm" ng-disabled="( ctrl.params.asunto.value == '-' || ctrl.sending  || ( ctrl.params.asunto.value == 'H' && ( ctrl.params.horas <= 0 || ctrl.params.horas == '' ) ) || ( ctrl.params.asunto.value == 'A' && ( ctrl.params.fecha == '' || ctrl.params.deposito == '' ) ) )" ><i class="fa fa-check"></i> Guardar</button>
+	    </div>
+	</form>
+</div>

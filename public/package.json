@@ -1,0 +1,25 @@
+{
+  "name": "CentrosVirtuales_Client",
+  "version": "2.0.0",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.4",
+    "angular-chart.js": "^1.1.1",
+    "angular-nvd3": "^1.0.9",
+    "angular-route": "^1.6.4",
+    "angular-toastr": "^2.1.1",
+    "angular-ui-bootstrap": "^2.5.0",
+    "angular-ui-router": "^1.0.3",
+    "highcharts": "^5.0.12",
+    "ui-select": "^0.19.8",
+    "jquery": "^3.2.1",
+    "socket.io-client": "^2.0.3"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-requirejs": "^1.0.0",
+    "grunt-contrib-uglify": "^2.2.1"
+  }
+}

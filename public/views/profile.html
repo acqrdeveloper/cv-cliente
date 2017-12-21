@@ -1,0 +1,164 @@
+<div style="padding: 0;">
+	<header class="custom-header">Mi Perfil</header>
+	<div class="p15">
+		<uib-tabset active="vm.auxs.active" class="tab-block mb25">
+			<uib-tab class="" index="0" select="vm.fn.selectTab(0)">
+				<uib-tab-heading>
+					<i class="fa fa-info-circle text-purple"></i> Información
+				</uib-tab-heading>
+				<div class="panel">
+					<div class="panel-heading">Datos de la empresa</div>
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="col-sm-6">
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Razon Social</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Razon Social" type="text" readonly="true" ng-value="vm.params.company.empresa_nombre">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Ruc</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="RUC" type="text" readonly="true" ng-value="vm.params.company.empresa_ruc">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Rubro</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Rubro" type="text" readonly="true" ng-value="vm.params.company.empresa_rubro">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Dirección fiscal</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Dirección fiscal" type="text" readonly="true" ng-value="vm.params.company.empresa_direccion">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="panel">
+					<div class="panel-heading">Encargado de facturación</div>
+					<div class="panel-body">
+						<form class="form-horizontal" ng-submit="vm.fn.updateBilling()">
+							<div class="col-sm-6">
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Nombres</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Nombres" type="text" ng-model="vm.params.billing.fac_nombre" ng-disabled="vm.auxs.sending">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Apellidos</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Apellidos" type="text" ng-model="vm.params.billing.fac_apellido" ng-disabled="vm.auxs.sending">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Correo</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Correo" type="text" ng-model="vm.params.billing.fac_email" ng-disabled="vm.auxs.sending">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Domicilio</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Domicilio" type="text" ng-model="vm.params.billing.fac_domicilio" ng-disabled="vm.auxs.sending">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Teléfono</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Teléfono" type="text" ng-model="vm.params.billing.fac_telefono" ng-disabled="vm.auxs.sending">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group form-group-sm">
+									<label class="col-sm-3 control-label">Celular</label>
+									<div class="col-sm-8">
+										<input class="form-control" placeholder="Celular" type="text" ng-model="vm.params.billing.fac_celular"  ng-disabled="vm.auxs.sending">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="pull-right">
+								<button type="submit" class="btn btn-sm btn-primary" ng-disabled="vm.auxs.sending">Guardar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</uib-tab>
+			<uib-tab index="1" select="vm.fn.selectTab(1)">
+				<uib-tab-heading>
+					<i class="fa fa-user text-purple"></i> Cuenta
+				</uib-tab-heading>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="panel">
+							<div class="panel-heading">Iniciar sesión</div>
+							<div class="panel-body">
+								<form class="form-horizontal" ng-submit="vm.fn.updateLogin()">
+									<div class="form-group form-group-sm">
+										<label class="col-sm-3 control-label">Correo</label>
+										<div class="col-sm-5">
+											<input type="text" class="form-control" ng-model="vm.params.login.preferencia_login" ng-disabled="vm.auxs.sending">
+										</div>
+										<div class="col-sm-3">
+											<button type="submit" class="btn btn-primary btn-sm">Cambiar correo</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="panel">
+							<div class="panel-heading">Cambiar Contraseña</div>
+							<div class="panel-body">
+								<form class="form-horizontal" ng-submit="vm.fn.updatePassword()">
+									<div class="form-group form-group-sm">
+										<label class="col-sm-3 control-label">Contraseña actual</label>
+										<div class="col-sm-8">
+											<input type="password" class="form-control" ng-model="vm.params.passwd.pass_old" ng-disabled="vm.auxs.sending">
+										</div>
+									</div>
+									<div class="form-group form-group-sm">
+										<label class="col-sm-3 control-label">Contraseña nueva</label>
+										<div class="col-sm-8">
+											<input type="password" class="form-control" ng-model="vm.params.passwd.pass_new_1" ng-disabled="vm.auxs.sending">
+										</div>
+									</div>
+									<div class="form-group form-group-sm">
+										<label class="col-sm-3 control-label">Confirmar</label>
+										<div class="col-sm-8">
+											<input type="password" class="form-control" ng-model="vm.params.passwd.pass_new_2" ng-disabled="vm.auxs.sending">
+										</div>
+									</div>
+									<div class="pull-right">
+										<button type="submit" class="btn btn-sm btn-primary">Cambiar contraseña</button>
+										<div class="clearfix"></div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</uib-tab>
+		</uib-tabset>
+	</div>
+	<br>
+</div>

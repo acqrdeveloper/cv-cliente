@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="ctrl.close()" ng-disabled="ctrl.deleting"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="modalEmpresaPago">Eliminar Reserva</h4>
+</div>
+<div class="modal-body">
+	<p>¿Desea eliminar esta reserva?</p>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-sm" data-dismiss="modal" ng-click="ctrl.close()" ng-disabled="ctrl.deleting"><i class="fa fa-times"></i> Cerrar</button>
+	<button type="button" class="btn btn-sm btn-danger" data-dismiss="modal" ng-click="ctrl.send()" ng-disabled="ctrl.deleting">
+		<span ng-if="!ctrl.deleting"><i class="fa fa-trash"></i> Eliminar</span>
+		<span ng-if="ctrl.deleting"><i class="fa fa-refresh fa-spin"></i> Eliminando</span>
+	</button>
+</div>

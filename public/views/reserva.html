@@ -1,0 +1,98 @@
+<div style="padding: 0;">
+	<header class="custom-header">Mis Reservas</header>
+    <form class="form-inline p15">
+		<div class="form-group form-group-sm">
+            <select class="form-control" ng-model="vm.params.estadoreserva" ng-options="estadoreserva.name for estadoreserva in vm.estadoreservas track by estadoreserva.value" ng-change="vm.methods.filterSearch()">
+            </select>
+		</div>
+        <div class="form-group form-group-sm">
+			<select class="form-control" ng-model="vm.params.anio"    ng-options="y for y in vm.years" ng-change="vm.methods.filterSearch()">
+			</select>
+        </div>
+		<div class="form-group form-group-sm">
+			<select class="form-control" ng-model="vm.params.mes"     ng-options="(key*1) as value for (key,value) in vm.months" ng-change="vm.methods.filterSearch()">
+			</select>
+		</div>
+		<div class="form-group form-group-sm">
+			<button ui-sref="reserva-create" type="button" class="btn btn-success hint--top" aria-label="nuevo">
+				<i class="fa fa-plus "></i>
+				<span class="ladda-label">Nuevo</span>
+			</button>
+		</div>
+    </form>
+    <div class="p15">
+    	<div class="panel">
+    		<div class="panel-body pn">
+				<div class="table-responsive">
+					<div class="bs-component">
+					    <table class="table">
+					        <thead>
+					            <tr>
+									<th class="text-center">Local</th>
+									<th class="text-center">Oficina</th>
+									<th class="text-center">Creado en</th>
+									<th class="text-center">Reservado para</th>
+									<th class="text-center">Cochera</th>
+									<th class="text-center"></th>
+					            </tr>
+					        </thead>
+					        <tbody>
+								<tr >
+					            	<td colspan="8" ng-if="vm.params.loading"><i class="fa fa-circle-o-notch fa-spin fa-lg"></i> Cargando ...</td>
+					            	<td colspan="8" ng-if="!vm.params.loading && vm.data.rows.length <= 0" class="text-center"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Datos no encontrados</td>
+					            </tr>
+							    <tr ng-if="!vm.params.loading && vm.data.rows.length > 0" ng-repeat="row in vm.data.rows">
+								    <td>{{ row.local_nombre }}</td>
+								    <td>
+								    	<div>{{ row.oficina_nombre }} Piso {{ row.oficina_piso }}</div>
+								    	<div><small><b>{{ row.oficina_tipo  }}</b></small></div>
+								    </td>
+								    <td class="text-center">{{ row.created_at }}</td>
+								    <td>
+										<div><i class="fa fa-calendar"></i> {{ row.fecha_reserva }}</div>
+										<div><small><i class="fa fa-clock-o"></i> {{ row.hora_inicio|timeFormat }} a {{row.hora_fin|timeFormat}}</small></div>
+								    </td>
+								    <td class="text-center">{{ row.cochera_nombre }}</td>
+								    <td>
+								    	<label ng-if="row.estado == 'E'" class="bg-danger text-center btn-sm" style="cursor:not-allowed !important;" tooltip-placement="left" uib-tooltip="Eliminado">
+								    		<i class="icon fa fa-remove"></i>
+								    	</label>
+
+								    	<label ng-if="row.estado == 'C'" class="bg-primary text-center btn-sm" style="cursor:not-allowed !important;" tooltip-placement="left" uib-tooltip="Por Confirmar">
+								    		<i class="icon fa fa-clock-o"></i>
+								    	</label>
+
+								    	<label ng-if="row.estado == 'P'" class="bg-warning text-center btn-sm" style="cursor:not-allowed !important;" tooltip-placement="left" uib-tooltip="Pendiente">
+								    		<i class="icon fa fa-question"></i>
+								    	</label>
+
+								    	<label ng-if="row.estado == 'A' && ( ( row.unix <= vm.params.now ) || ( row.oficina_tipo == 'AUDITORIO' || row.oficina_tipo == 'CAPACITACION' ||  row.oficina_tipo == 'TERRAZA' ) ) " class="bg-success text-center btn-sm" style="cursor:not-allowed !important;" tooltip-placement="left" uib-tooltip="Aceptado">
+								    		<i class="icon fa fa-check"></i>
+								    	</label>
+
+								    	<button ng-if="row.unix > vm.params.now && ((row.estado == 'A' && row.modelo_id == 1) || ( (['P','C']).indexOf(row.estado) >= 0 )) " class="btn btn-sm btn-danger delete-reserva" ng-click="vm.methods.cancel( $index, row.id )" tooltip-placement="left" uib-tooltip="Eliminar Reserva">
+								    		<i class="fa fa-trash fa-lg"></i>
+								    	</button>
+								    </td>
+							    </tr>
+					        </tbody>
+					    </table>
+					</div>
+				</div>
+				<div class="p15 table-pagination" ng-if="!vm.params.loading">
+					<div class="mn pull-left pagination">
+						<li class="disabled text-center"><span style="background-color: #f8f8f8; color: #000000" aria-hidden="true">{{ 1 + ((vm.params.pagina-1)*vm.params.limite) }}</span></li>
+						<li class="disabled text-center"><span aria-hidden="true">hasta</span></li>
+						<li class="disabled text-center"><span style="background-color: #f8f8f8; color: #000000" aria-hidden="true">{{ vm.data.rows.length + ((vm.params.pagina-1)*vm.params.limite) }}</span></li>
+						<li class="disabled text-center"><span aria-hidden="true">de</span></li>
+						<li class="disabled text-center"><span style="background-color: #f8f8f8; color: #000000" aria-hidden="true">{{ vm.data.total }}</span></li>
+						<li class="disabled text-center"><span aria-hidden="true">registros</span></li>
+					</div>
+					<ul uib-pagination boundary-links="true" total-items="vm.data.total" ng-model="vm.params.pagina" max-size="5" class="mn pagination-sm pull-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" ng-change="vm.methods.search()" boundary-link-numbers="true" rotate="false" items-per-page="vm.params.limite"></ul>
+					<div class="clearfix"></div>
+				</div>
+    		</div>
+    	</div>
+    </div>
+    <br>
+</div>

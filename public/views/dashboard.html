@@ -1,0 +1,58 @@
+<div>
+    <form class="form-inline pb10 ng-pristine ng-valid">
+        <div class="form-group form-group-sm">
+            <select class="form-control" ng-model="vm.params.anio" ng-options="(y*1) for y in vm.years" ng-change="vm.requestData()" ng-disabled="vm.params.loading"></select>
+        </div>
+        <div class="form-group form-group-sm">
+            <select class="form-control" ng-model="vm.params.mes" ng-options="(key*1)+1 as value for (key,value) in vm.months" ng-change="vm.requestData()" ng-disabled="vm.params.loading"></select>
+        </div>
+        <div class="form-group form-group-sm">
+            <button ng-click="vm.requestData()" type="button" class="btn btn-success" ng-disabled="vm.params.loading"><i class="fa fa-refresh fa-lg"></i></button>
+        </div>
+    </form>
+    <div class="row mb10">
+        <div class="col-md-4">
+            <div class="panel">
+                <div class="panel-heading">Mis servicios</div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td><b>Plan</b></td>
+                                    <td class="text-right">{{ vm.plan.nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b><i class="fa fa-user-o"></i> Horas Privadas</b></td>
+                                    <td class="text-right">{{ vm.info.horas_privada }} hrs.</td>
+                                </tr>
+                                <tr>
+                                    <td><b><i class="fa fa-users"></i> Horas Reunión</b></td>
+                                    <td class="text-right">{{ vm.info.horas_reunion }} hrs.</td>
+                                </tr>
+                                <tr>
+                                    <td><b><i class="fa fa-print"></i> Impresiones</b></td>
+                                    <td class="text-right">{{ vm.info.cantidad_impresiones }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b><i class="fa fa-file-o"></i> Copias</b></td>
+                                    <td class="text-right">{{ vm.info.cantidad_copias }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <a href ui-sref="reserva-create" class="btn btn-primary" style="width: 100%;">Reservar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel">
+                <div class="panel-heading">Balance de llamadas</div>
+                <div class="panel-body">
+                    <div id="high-pie"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

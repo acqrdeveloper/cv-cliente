@@ -1,0 +1,98 @@
+<div ng-controller="AppCtrl as vm" ng-init="vm.fn.init()">
+    <header class="navbar navbar-fixed-top bg-primary">
+        <div class="navbar-branding">
+            <a class="navbar-brand" href="dashboard.html">
+                <b>Súmate</b> al Éxito
+            </a>
+            <span id="toggle_sidemenu_l" class="ad ad-lines" ></span>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href ng-click="vm.fn.openModal('horario')"><i class="fa fa-clock-o"></i></a>
+            </li>
+            <li class="dropdown">
+                <a href ng-click="vm.fn.openModal('agents')"><i class="fa fa-users"></i></a>
+            </li>
+            <li class="dropdown">
+                <a href ng-click="vm.fn.openModal('account_bank')"><i class="fa fa-bank"></i></a>
+            </li>
+            <li class="menu-divider hidden-xs">
+              <i class="fa fa-circle"></i>
+            </li>
+            <li class="dropdown" uib-dropdown>
+                <a href uib-dropdown-toggle>
+                    <i class="fa fa-building fa-fw"></i>
+                    <span>{{ vm.profile.empresa_nombre }}</span>
+                    <span class="caret caret-tp hidden-xs"></span>
+                </a>
+                <ul class="dropdown-menu list-group dropdown-persist w250" uib-dropdown-menu role="menu">
+                    <li><a href ui-sref="profile">Mi Perfil</a></li>
+                    <li class="dropdown-footer">
+                        <a href="/salir">
+                            <span class="fa fa-power-off pr5"></span> Salir </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    <aside id="sidebar_left" class="nano nano-primary affix">
+        <!-- Start: Sidebar Left Content -->
+        <div class="sidebar-left-content nano-content">
+            <!-- Start: Sidebar Left Menu -->
+            <ul class="nav sidebar-menu">
+                <li ui-sref-active="active">
+                    <a ui-sref="dashboard">
+                        <span class="fa fa-tachometer"></span>
+                        <span class="sidebar-title">Inicio</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="reserva">
+                    	<span class="fa fa-calendar-o fa-fw"></span>
+                    	<span class="sidebar-title">Reserva</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="bandeja">
+                    	<span class="fa fa-inbox fa-fw"></span>
+                    	<span class="sidebar-title">Bandeja
+                            <span class="badge " style="background-color: red;" ng-if="vm.static.inbox > 0"> {{ vm.static.inbox }} </span>
+                        </span>
+
+                    </a>
+                </li>
+                <li ui-sref-active="active">
+                    <a ui-sref="reporte">
+                    	<span class="fa fa-file-pdf-o fa-fw"></span>
+                    	<span class="sidebar-title">Reporte</span>
+                    </a>
+                </li>
+                <li ui-sref-active="active" ng-if="vm.profile.carrera!='N'">
+                    <a ui-sref="abogado">
+                    	<span class="fa fa-legal fa-fw"></span>
+                    	<span class="sidebar-title">Abogado</span>
+                    </a>
+                </li>
+            </ul>
+            <!-- End: Sidebar Menu -->
+            <!-- Start: Sidebar Collapse Button -->
+            <div class="sidebar-toggle-mini">
+                <a href="#">
+                    <span class="fa fa-sign-out"></span>
+                </a>
+            </div>
+            <!-- End: Sidebar Collapse Button -->
+        </div>
+        <!-- End: Sidebar Left Content -->
+    </aside>
+    <section id="content_wrapper">
+        <section ui-view id="content" class="table-layout"></section>
+        <footer id="content-footer" style="position: fixed!important; z-index: 1500;">
+            <div class="row" style="text-align: center; color: #5f5858;">
+                <div class="col-md-12">
+                    <span class="footer-legal">© 2017 Súmate al Éxito | Todos los derechos reservados.</span>
+                </div>
+            </div>
+        </footer>
+    </section>
+</div>

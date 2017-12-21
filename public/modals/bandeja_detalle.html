@@ -1,0 +1,48 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="ctrl.close()"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title" id="modalCorrespondencia">Seguimiento</h4>
+</div>
+<div class="modal-body">
+	<div style="max-height: 200px; overflow-y: auto;">
+		<div class="row" ng-if="ctrl.loading" style="margin: 0;"><i class="fa fa-refresh fa-spin fa-fw"></i> Cargando...</div>
+		<div class="row mt10" ng-if="!ctrl.loading" ng-repeat="message in ctrl.messages" style="margin: 0;border-bottom: 1px dashed rgb(206, 205, 205);">
+			<div class="pull-{{message.de_tipo == 'C'?'left':'right'}}">
+				<p style="margin: 0;" ng-if="message.asunto != 'H' && message.asunto != 'A'" ng-bind-html="message.mensaje | to_trusted"></p>
+				<div style="margin: 0;" ng-if="message.asunto == 'H'">
+					<p style="margin: 0;">Solicitud de <strong>{{ message.mensaje.horas }} horas extras</strong> para <strong>{{ message.mensaje.tipo==='R'?'Sala de Reuniones':'Oficina Privada' }}</strong></p> 
+					<p style="margin: 0;"><strong>Pago:</strong> {{ message.mensaje.pago === 'F'?'Sgte. Facturación':'Al momento' }}</p>
+					<p style="margin: 0;"><strong>Periodo:</strong> {{ message.mensaje.mes }}/{{ message.mensaje.anio }}</p>
+					<p style="margin: 0;"><strong>Depósito:</strong> {{ message.mensaje.deposito }}</p>
+					<p style="margin: 0;"><strong>Observación:</strong> {{ message.mensaje.obs }}</p>
+				</div>
+				<div style="margin: 0;" ng-if="message.asunto == 'A'">
+					<p style="margin: 0;">Solicitud de <strong>Auditorio</strong> para el día <strong>{{ message.mensaje.fecha }}</strong></p>
+					<p style="margin: 0;"><strong>Depósito:</strong> {{ message.mensaje.deposito }}</p>
+					<p style="margin: 0;"><strong>Observación:</strong> {{ message.mensaje.obs }}</p>
+				</div>
+
+				<small ng-if="message.de_tipo === 'C'">de <strong>{{ message.empresa_nombre }}</strong> - {{ message.created_at}}</small>
+				<small ng-if="message.de_tipo === 'E'">de <strong>{{ ctrl.empleados[message.de] }}</strong> - {{ message.created_at}}</small>
+			</div>
+			<div class="pull-right"  ng-if="message.respuesta_id == 0 && (message.asunto == 'H' || message.asunto == 'A')">
+				<span class="label label-warning" style="font-size: 100%;">Por Confirmar</span>
+			</div>
+			<div class="pull-right"  ng-if="message.respuesta_id > 0 && (message.asunto == 'H' || message.asunto == 'A')">
+				<span class="label label-{{ message.respuesta_id == 1?'success':'danger'}}" style="font-size: 100%;">{{ message.respuesta_id == 1?'Aceptado':'Rechazado'}}</span>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<div style="margin-top: 20px;" ng-if="ctrl.params.disabled!=='1'">
+		<div class="input-group">
+			<input type="text" ng-model="ctrl.params.mensaje" class="form-control" placeholder="Escriba el mensaje aquí" aria-describedby="basic-addon2" ng-disabled="ctrl.sending">
+			<span class="input-group-btn" id="basic-addon2">
+				<button class="btn btn-primary" type="button" ng-click="ctrl.send()" ng-disabled="ctrl.sending"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+			</span>
+		</div>
+	</div>
+	<hr>
+	<div class="text-right mb0">
+		<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" ng-click="ctrl.close()" ng-disabled="ctrl.sending">Cerrar</button>
+	</div>
+</div>

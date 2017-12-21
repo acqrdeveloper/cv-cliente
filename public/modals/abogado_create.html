@@ -1,0 +1,31 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="$ctrl.close()"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title" id="modalCorrespondencia">Nuevo Caso</h4>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" ng-submit="$ctrl.send()">
+		<div class="form-group form-group-sm">
+			<label class="control-label col-sm-2">Caso</label>
+			<div class="col-sm-10">
+				<input type="text" name="caso" id="caso" required class="form-control" placeholder="Caso" ng-model="$ctrl.params.caso" ng-disabled="$ctrl.sending">
+			</div>
+		</div>
+		<div class="form-group form-group-sm">
+			<label class="control-label col-sm-2">Demandante</label>
+			<div class="col-sm-10">
+				<input type="text" name="demandante" id="demandante" required class="form-control" placeholder="Demandante" ng-model="$ctrl.params.demandante" ng-disabled="$ctrl.sending">
+			</div>
+		</div>
+		<div class="form-group form-group-sm">
+			<label class="control-label col-sm-2">Demandado</label>
+			<div class="col-sm-10">
+				<input type="text" name="demandado" id="demandado" required class="form-control" placeholder="Demandado" ng-model="$ctrl.params.demandado" ng-disabled="$ctrl.sending">
+			</div>
+		</div>
+		<hr>
+		<div class="text-right mb0">
+			<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" ng-click="$ctrl.close()" ng-disabled="$ctrl.sending">Cerrar</button>
+			<button type="submit" class="btn btn-warning btn-sm" ng-disabled="!($ctrl.params.caso.length > 0 && $ctrl.params.demandante.length > 0 && $ctrl.params.demandado.length > 0) || $ctrl.sending" ><i class="fa fa-check"></i> Guardar</button>
+		</div>
+	</form>
+</div>

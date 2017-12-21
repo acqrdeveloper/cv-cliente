@@ -1,0 +1,255 @@
+<div class="row" ng-controller="ReservaCreateCtrl as vm" ng-init="vm.fn.init()">
+    <div class="col-lg-12">
+        <form ng-submit="vm.fn.create()">
+            <div class="row col-xs-12 mb20">
+                <div class="form-inline">
+                    <div class="form-group form-group-sm">
+                        <select class="form-control" ng-model="vm.params.modelo_id" ng-options="modelo.id as modelo.nombre for modelo in vm.aux.modelos" ng-change="vm.fn.filterHq(); vm.fn.getAvailableV1();" ng-disabled="vm.aux.saving"></select>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <select class="form-control" ng-model="vm.params.local_id" ng-options="local.id as local.nombre for local in vm.aux.locales" ng-change="vm.fn.getAvailableV1()" ng-disabled="vm.aux.saving"></select>
+                    </div>
+                    <div class="form-group form-group-sm input-group date">
+                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.params.fecha" is-open="vm.aux.open1" datepicker-options="vm.aux.dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="" ng-click="vm.fn.openCalendar()" ng-change="vm.fn.getAvailableV1()" ng-disabled="vm.aux.saving" style="width: 110px;"/>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.fn.openCalendar()" ng-disabled="vm.aux.saving"><i class="fa fa-calendar"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <select class="form-control" ng-model="vm.params.hini" ng-options="t.id as t.value for t in vm.aux.times1" ng-change="vm.fn.getAvailableV1()" ng-disabled="vm.aux.saving"></select>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <select class="form-control" ng-model="vm.params.hfin" ng-options="t.id as t.value for t in vm.aux.times2" ng-change="vm.fn.getAvailableV1()" ng-disabled="vm.aux.saving"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-7">
+                    <div class="panel panel-info">
+                        <div class="panel-heading"><i class="fa fa-list"></i> Lista de espacios</div>
+                        <div class="panel-body" id="office-list">
+                            <div class="text-center" ng-show="vm.aux.searching_spaces"><b><i class="fa fa-refresh fa-spin fa-fw"></i> Buscando espacios</b></div>
+                            <div class="text-center" ng-show="vm.aux.oficinas.length<=0 && !vm.aux.searching_spaces"><b><i class="fa fa-info-circle"></i> Seleccione una oficina disponible</b></div>
+                            <div class="col-lg-4 col-md-6" ng-repeat="of in vm.aux.oficinas"  ng-if="vm.aux.oficinas.length>0">
+                                <div class="p10 office-item" ng-class="{'active':(vm.params.oficina_id==of.oficina_id)}" ng-click="vm.fn.selectOffice(of)">
+                                    <div class="clearfix">
+                                        <span class="text-primary" style="font-size: 85%;"><b>{{of.tipo}} {{ of.nombre }} - Piso {{ of.piso_id }}</b></span>
+                                        <span class="pull-right">
+                                            <i ng-if="of.reserva_id>0" class="fa fa-ban text-danger"></i>
+                                            <i ng-if="of.reserva_id<=0" class="fa fa-check text-success"></i>
+                                        </span>
+                                    </div>
+                                    <div><i class="fa fa-users"></i> {{of.capacidad}} Persona(s)</div>
+                                    <div ng-if="of.tipo == 'REUNION'"><i class="fa fa-tv"></i> Incluye Smart TV</div>
+                                    <div ng-if="of.reserva_id>0" class="text-danger">Ver otros horarios</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-5">
+                    <div>
+                        <div class="panel panel-warning"  ng-if="vm.aux.unavailable_space">
+                            <div class="panel-heading">Seleccione un horario disponible para la empresa</div>
+                            <div class="panel-body" style="height: 250px; overflow-y: scroll;">
+                                <table class="table">
+                                  <tbody>
+                                    <tr ng-repeat="time in vm.aux.time_list">
+                                      <td class="text-center"><input type="radio" ng-model="vm.params.hini" value="{{time.hini}}" ng-hide="time.disponible === 'OCUPADO'" ng-click="vm.fn.getCocheras()" ng-disabled="vm.aux.saving"></td>
+                                      <td class="text-center">{{ time.hini }}</td>
+                                      <td class="text-center">{{ time.disponible }}</td>
+                                      <td class="text-center">{{ time.hfin }}</td>
+                                      <td class="text-center"><input type="radio" ng-model="vm.params.hfin" value="{{time.hfin}}" ng-hide="time.disponible === 'OCUPADO'" ng-click="vm.fn.getCocheras()" ng-disabled="vm.aux.saving"></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info"  ng-if="!vm.aux.unavailable_space">
+                            <div class="panel-heading"><i class="fa fa-eye"></i> Vista Referencial</div>
+                            <div class="panel-body">
+                                <img ng-src="{{ '/images/web_' + (vm.aux.space_image===null?'preload.jpg':vm.aux.space_image) }}" style="display:block;margin:auto;max-height:253px;width:100%" ng-if="!vm.aux.unavailable_space"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="clearfix" ng-if="vm.params.modelo_id>1 && vm.params.oficina_id>0">
+                <div class="panel panel-info">
+                    <div class="panel-heading"><i class="fa fa-users"></i> Configuración de Auditorio</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Nombre del Evento</label>
+                                    <input type="text" class="form-control input-sm" placeholder="Nombre del Evento" ng-model="vm.params.nombre" ng-disabled="vm.aux.saving">
+                                </div>
+                                <div class="form-group row" ng-if="vm.params.modelo_id != 3">
+                                    <div class="col-sm-4">
+                                        <label>Sillas</label>
+                                        <input type="number" class="form-control input-sm" placeholder="Cantidad de sillas" ng-model="vm.params.silla" min="20" ng-disabled="vm.aux.saving">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Mesas</label>
+                                        <select class="form-control input-sm" ng-model="vm.params.mesa" ng-disabled="vm.aux.saving">
+                                            <option value="0">No desea mesas</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Audio</label>
+                                        <div>
+                                            <label class="radio-inline"><input type="radio" value="S" ng-model="vm.params.audio" ng-disabled="vm.aux.saving">SI</label>
+                                            <label class="radio-inline"><input type="radio" value="N" ng-model="vm.params.audio" ng-disabled="vm.aux.saving">NO</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-if="!vm.aux.edit">
+                                    <label>Lista de invitados</label>
+                                    <input type="file" class="form-control" id="file_invitados" ng-disabled="vm.aux.saving">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group" ng-if="!vm.aux.edit">
+                                    <label>Cupón</label>
+                                    <div class="input-group">
+                                        <input class="form-control input-sm" ng-model="vm.params.cupon" placeholder="Ingrese aquí el código del cupón" ng-disabled="vm.aux.searching_cupon || vm.aux.blockCupon" ng-disabled="vm.aux.saving">
+                                        <div class="input-group-btn">
+                                            <button ng-if="!vm.aux.blockCupon" type="button" class="btn btn-sm btn-success" ng-click="vm.fn.validateCupon()" ng-disabled="vm.aux.searching_cupon || vm.aux.saving">
+                                                <i class="fa" ng-class="{'fa-ticket':!vm.aux.searching_cupon,'fa-refresh fa-spin fa-fw':vm.aux.searching_cupon}"></i></button>
+                                            <button ng-if="vm.aux.blockCupon" type="button" class="btn btn-sm btn-danger" ng-click="vm.fn.validateCupon()">
+                                                <i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>¿Desea Coffee break?</label>
+                                    <div>
+                                        <label class="radio-inline"><input type="radio" value="S" ng-model="vm.params.coffeebreak" ng-click="vm.fn.clearCB()" ng-disabled="vm.aux.saving">SI</label>
+                                        <label class="radio-inline"><input type="radio" value="N" ng-model="vm.params.coffeebreak" ng-click="vm.fn.clearCB()" ng-disabled="vm.aux.saving">NO</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="margin: 15px 0;">
+                        <div class="form-group">
+                            <label>Resumen de Pago</label>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" width="25%">Concepto</th>
+                                            <th class="text-center" width="25%">Cantidad</th>
+                                            <th class="text-center" width="25%">Precio Unitario (S/.)</th>
+                                            <th class="text-center" width="25%">Precio Total (S/.)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Alquiler de Espacio</td>
+                                            <td class="text-right">{{ vm.aux.diffTime }} hora(s)</td>
+                                            <td class="text-right">{{ vm.aux.prices.precio }}</td>
+                                            <td class="text-right">{{ (vm.aux.prices.precio * vm.aux.diffTime)|number:2 }}</td>
+                                        </tr>
+                                        <tr ng-if="vm.params.coffeebreak === 'S'">
+                                            <td>
+                                                <ui-select ng-model="vm.aux.selected_coffeebreak" on-select="vm.fn.selectCoffeebreak()" ng-disabled="vm.aux.saving">
+                                                    <ui-select-match placeholder="Selecciona uno de los combos...">{{$select.selected.nombre}}</ui-select-match>
+                                                    <ui-select-choices repeat="combo in vm.aux.coffeebreak" style="width:200%;max-height: 300px;">
+                                                        <div class="row">
+                                                            <div class="col-sm-3 padding0">
+                                                                <img src="/images/coffeebreak/combo{{combo.id}}.jpg" width="100%">
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <b>{{ combo.nombre }}</b>
+                                                                <div><b>Precio: S/. {{ combo.precio}} x persona</b></div>
+                                                                <div><b>Contiene:</b></div>
+                                                                <div style="white-space: pre-wrap;">{{ combo.descripcion }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </td>
+                                            <td><input type="number" class="form-control input-sm" placeholder="¿Cuántos desea?" ng-model="vm.params.selected_cb.cantidad" ng-required="vm.params.coffeebreak === 'S'" ng-disabled="vm.aux.saving"></td>
+                                            <td class="text-right">{{ vm.aux.selected_coffeebreak.precio | number:2 }}</td>
+                                            <td class="text-right">{{ (vm.params.selected_cb.cantidad * vm.aux.selected_coffeebreak.precio) | number:2 }}</td>
+                                        </tr>
+                                        <tr ng-if="vm.aux.blockCupon">
+                                            <td>Cupón de Descuento</td>
+                                            <td class="text-right">1</td>
+                                            <td class="text-right">{{ vm.aux.selected_cupon.precio|number:2 }}</td>
+                                            <td class="text-right">{{ vm.aux.selected_cupon.precio|number:2 }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-right"><b>Total a Pagar</b></td>
+                                            <td class="text-right">S/. {{vm.fn.getTotalCost()|number:2}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix" ng-if="vm.params.modelo_id == 1 && vm.params.oficina_id>0">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Adicionales</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6 clearfix">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <label>Cochera</label>
+                                        <select class="form-control input-sm" ng-model="vm.params.cochera_id" ng-options="(c.cochera_id*1) as c.cochera_nombre for c in vm.aux.cocheras" ng-disabled="vm.aux.saving"></select>
+                                    </div>
+                                    <div class="col-sm-5" ng-if="vm.params.cochera_id>0">
+                                        <label>Nro. Placa</label>
+                                        <input class="form-control input-sm" ng-model="vm.params.placa" placeholder="Número de Cochera" type="text" ng-readonly="vm.params.cochera_id<=0" maxlength="6" ng-disabled="vm.aux.saving"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 clearfix">
+                                <label>Observación</label>
+                                <textarea class="form-control" ng-model="vm.params.observacion" placeholder="Escribe aquí alguna observación adicional" rows="4" style="resize:none;height: 82px;" ng-disabled="vm.aux.saving"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix" ng-if="vm.params.modelo_id > 1 && vm.params.oficina_id>0">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Observación</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12 clearfix">
+                                <textarea class="form-control" ng-model="vm.params.observacion" placeholder="Escribe aquí alguna observación adicional" rows="4" style="resize:none;height: 82px;" ng-disabled="vm.aux.saving"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix" ng-if="vm.params.oficina_id>0">
+                <div class="text-right">
+                    <button type="button" class="btn btn-default" style="width: 25%" ng-if="vm.aux.edit" ng-click="vm.fn.cancel()" ng-disabled="vm.aux.saving">Cancelar</button>
+                    <button type="submit" class="btn btn-success" style="width: 25%" ng-disabled="aux.saving">
+                        <span ng-if="!vm.aux.saving">Reservar</span>
+                        <span ng-if="vm.aux.saving && !vm.aux.edit"><i class="fa fa-refresh fa-spin fa-fw"></i> Reservando</span>
+                        <span ng-if="vm.aux.saving && vm.aux.edit"><i class="fa fa-refresh fa-spin fa-fw"></i> Actualizando</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+<div style="padding: 0;">
+	<header class="custom-header">Reportes Diversos</header>
+	<form class="form-inline p15">
+		<div class="form-group form-group-sm">
+            <select class="form-control" ng-model="vm.params.reporte" ng-options="reporte.name for reporte in vm.reportes track by reporte.value" ng-change="vm.methods.resetSearch()">
+            </select>
+		</div>
+        <div class="form-group form-group-sm">
+			<select class="form-control" ng-model="vm.params.anio"    ng-options="y for y in vm.years" ng-change="vm.methods.filterSearch()">
+			</select>
+        </div>
+		<div class="form-group form-group-sm">
+			<select class="form-control" ng-model="vm.params.mes"     ng-options="(key*1) as value for (key,value) in vm.months" ng-change="vm.methods.filterSearch()">
+			</select>
+		</div>
+		<div class="form-group form-group-sm" ng-if="vm.params.reporte.value=='correspondencia' || vm.params.reporte.value=='recado'">
+			<select class="form-control" ng-model="vm.params.estado" ng-change="vm.methods.filterSearch()">
+				<option value="-">Seleccionar Estado</option>
+				<option value="P">Pendiente</option>
+				<option value="E">Entregado</option>
+			</select>
+		</div>
+		<div class="form-group form-group-sm" ng-if="vm.params.reporte.value=='factura'">
+			<select class="form-control" ng-model="vm.params.estado" ng-change="vm.methods.filterSearch()">
+				<option value="-">Seleccionar Estado</option>
+				<option value="PAGADA">Pagada</option>
+				<option value="PENDIENTE">Pendiente</option>
+			</select>
+		</div>
+		<div class="form-group form-group-sm">
+			<button ng-click="vm.methods.xls()" type="button" class="btn btn-success hint--top" aria-label="exportar" value="Exportar"><i class="fa fa-file-excel-o fa-lg"></i></button>
+		</div>
+	</form>
+	<div class="p15">
+		<div class="panel">
+			<div class="panel-body pn">
+				<div class="table-responsive">
+					<div class="bs-component">
+					    <table class="table">
+					    	<thead ng-if="vm.columns.length>0">
+					    		<tr style="font-weight: bolder;">
+					    			<th class="text-center" ng-repeat="col in vm.columns">{{ col }}</th>
+					    		</tr>
+					    	</thead>
+					        <tbody>
+								<tr >
+					            	<td class="text-center" colspan="6" ng-if="vm.params.loading"><i class="fa fa-circle-o-notch fa-spin fa-lg"></i> Cargando ...</td>
+					            	<td class="text-center" colspan="6" ng-if="!vm.params.loading && vm.data[vm.params.reporte.value].rows.length <= 0"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Datos no encontrados</td>
+					            </tr>
+					        	<tr ng-if="!vm.params.loading && vm.data[vm.params.reporte.value].rows.length > 0" ng-repeat="row in vm.data[vm.params.reporte.value].rows track by $index">
+					        		<td class="{{ rscol.classes }}" ng-repeat="rscol in vm.rsColumns">{{ row[rscol.id] }}</td>
+					        		<td class="text-center" ng-if="vm.params.reporte.value=='cdr'"><label class="badge {{ row.disposition=='ANSWERED'?'badge-success':'badge-danger' }}">&nbsp;</label></td>
+									<td ng-if="vm.params.reporte.value=='factura'" >
+										<button ng-click="vm.methods.detalle(row.id)" type="button" class="hint--top" aria-label="Detalle" value="Detalle" ><i class="fa fa-book "></i>&nbsp;</button><!--btn btn-success -->
+										<button ng-if="row.comprobante=='FACTURA'" ng-click="vm.methods.pdf( row.empresa_ruc, row.comprobante, row.serie, row.numero )" type="button" class="hint--top" aria-label="Detalle" value="Detalle" ><i class="fa fa-file-pdf-o "></i>&nbsp;</button><!--btn btn-success -->
+									</td>
+
+									<td ng-if="vm.params.reporte.value=='invitados'" >
+										<button ng-click="vm.methods.invitados(row.reserva_id)" type="button" class="btn btn-success hint--top" aria-label="exportar" value="Exportar"><i class="fa fa-file-excel-o fa-lg"></i></button>
+									</td>
+
+			
+
+					        	</tr>
+					        </tbody>
+					    </table>
+					</div>
+				</div>
+				<div class="p15 table-pagination clearfix" ng-if="!vm.params.loading">
+					<div class="pull-left pagination">
+						<li class="disabled text-center"><span style="background-color: #f8f8f8; color: #000000" aria-hidden="true">{{ 1 + ((vm.params.pagina-1)*vm.params.limite) }}</span></li>
+						<li class="disabled text-center"><span aria-hidden="true">hasta</span></li>
+						<li class="disabled text-center"><span style="background-color: #f8f8f8; color: #000000" aria-hidden="true">{{ vm.data[vm.params.reporte.value].rows.length + ((vm.params.pagina-1)*vm.params.limite) }}</span></li>
+						<li class="disabled text-center"><span aria-hidden="true">de</span></li>
+						<li class="disabled text-center"><span style="background-color: #f8f8f8; color: #000000" aria-hidden="true">{{ vm.data[vm.params.reporte.value].total }}</span></li>
+						<li class="disabled text-center"><span aria-hidden="true">registros</span></li>
+					</div>
+					<ul uib-pagination boundary-links="true" total-items="vm.data[vm.params.reporte.value].total" ng-model="vm.params.pagina" max-size="5" class="pagination-sm pull-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" ng-change="vm.methods.search()" boundary-link-numbers="true" rotate="false" items-per-page="vm.params.limite"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+</div>
